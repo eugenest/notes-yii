@@ -26,6 +26,8 @@ class NoteController extends ActiveController
     
     public function actionMail()
     {
+        $_POST = json_decode(file_get_contents('php://input'), true); //TODO find clearer way
+        
         if (!empty(Yii::$app->request->post())) {
             $request = Yii::$app->request->post();
             

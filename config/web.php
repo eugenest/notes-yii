@@ -52,7 +52,7 @@ $config = [
             'showScriptName' => false,
             'rules' => [
                 ['class' => 'yii\rest\UrlRule', 'controller' => 'note'],
-                ['class' => 'yii\rest\UrlRule', 'controller' => 'note', 'extraPatterns' => ['POST mail' => 'mail', 'GET csv' => 'csv']],
+                ['class' => 'yii\rest\UrlRule', 'controller' => 'note', 'extraPatterns' => ['GET csv' => 'csv', 'POST mail' => 'mail']],
             ],
         ],
     ],
