@@ -32,7 +32,7 @@ use yii\widgets\LinkPager;
                     <a href="<?= Url::toRoute(['csv', 'id' => $note->id]); ?>" target="_blank">
                         <button class="btn btn-primary btn-xs">CSV</button>
                     </a>
-                    <a href="<?= Url::toRoute(['mail', 'id' => $note->id]); ?>">
+                    <a href="<?= Url::toRoute(['send-mail', 'id' => $note->id]); ?>">
                         <button class="btn btn-primary btn-xs">Mail</button>
                     </a>
                 </div>

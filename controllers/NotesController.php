@@ -112,7 +112,7 @@ class NotesController extends Controller
         echo NotesHelper::array2csv(array($note));
     }
     
-    public function actionMail()
+    public function actionSendMail()
     {
         if (!empty(Yii::$app->request->post())) {
             $email = Yii::$app->request->post();
