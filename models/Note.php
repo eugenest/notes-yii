@@ -14,6 +14,7 @@ class Note extends ActiveRecord
     {
         return [
             [['title', 'description', 'author'], 'required'],
+            [['image'], 'string']
         ];
     }
 }
