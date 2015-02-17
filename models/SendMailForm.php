@@ -3,16 +3,16 @@
 namespace app\models;
 
 use yii\base\Model;
-use yii\web\UploadedFile;
 
-class UploadImage extends Model
+class SendMailForm extends Model
 {
-    public $file;
+    public $email;
 
     public function rules()
     {
         return [
-            [['file'], 'file'],
+            ['email', 'required'],
+            ['email', 'email'],
         ];
     }
 }

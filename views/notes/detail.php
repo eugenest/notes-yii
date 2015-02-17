@@ -5,18 +5,20 @@ use yii\helpers\Url;
 <div class="site-index">
     <h1>
         Note: <?= $note->title; ?>
-        <a href="<?= Url::toRoute(['edit', 'id' => $note->id]); ?>">
-            <button class="btn btn-primary btn-xs">Edit</button>
-        </a>
-        <a href="<?= Url::toRoute(['delete', 'id' => $note->id]); ?>">
-            <button class="btn btn-danger btn-xs">&times;</button>
-        </a>
-        <a href="<?= Url::toRoute(['csv', 'id' => $note->id]); ?>" target="_blank">
-            <button class="btn btn-primary btn-xs">CSV</button>
-        </a>
-        <a href="<?= Url::toRoute(['mail', 'id' => $note->id]); ?>" target="_blank">
-            <button class="btn btn-primary btn-xs">Mail</button>
-        </a>
+        <div class="notes-controls">
+            <a href="<?= Url::toRoute(['edit', 'id' => $note->id]); ?>">
+                <button class="btn btn-primary btn-xs">Edit</button>
+            </a>
+            <a href="<?= Url::toRoute(['delete', 'id' => $note->id]); ?>">
+                <button class="btn btn-danger btn-xs">&times;</button>
+            </a>
+            <a href="<?= Url::toRoute(['csv', 'id' => $note->id]); ?>" target="_blank">
+                <button class="btn btn-primary btn-xs">CSV</button>
+            </a>
+            <a href="<?= Url::toRoute(['mail', 'id' => $note->id]); ?>">
+                <button class="btn btn-primary btn-xs">Mail</button>
+            </a>
+        </div>
     </h1>
     <p><?= $note->create_date; ?> : <?= $note->author; ?></p>
     <p><?= $note->description; ?></p>

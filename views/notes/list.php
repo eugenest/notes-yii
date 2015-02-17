@@ -5,14 +5,13 @@ use yii\widgets\LinkPager;
 ?>
 
 <div class="site-index">
-    
-    <h1>Notes</h1>
-    
-    <p>
+    <h1>
+        Notes
         <a href="<?= Url::toRoute(['add']); ?>">
             <button class="btn btn-primary">Add</button>
         </a>
-    </p>
+    </h1>
+    
     <?php if (count($notes) > 0) : ?>
         <ul class="notes-list">
         <?php foreach ($notes as $note): ?>
@@ -33,7 +32,7 @@ use yii\widgets\LinkPager;
                     <a href="<?= Url::toRoute(['csv', 'id' => $note->id]); ?>" target="_blank">
                         <button class="btn btn-primary btn-xs">CSV</button>
                     </a>
-                    <a href="<?= Url::toRoute(['mail', 'id' => $note->id]); ?>" target="_blank">
+                    <a href="<?= Url::toRoute(['mail', 'id' => $note->id]); ?>">
                         <button class="btn btn-primary btn-xs">Mail</button>
                     </a>
                 </div>

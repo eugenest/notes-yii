@@ -6,6 +6,7 @@ use Yii;
 use yii\web\Controller;
 use app\models\Note;
 use app\models\UploadImage;
+use app\models\SendMailForm;
 use yii\web\UploadedFile;
 use app\helpers\Notes as NotesHelper;
 use yii\data\Pagination;
@@ -25,7 +26,6 @@ class NotesController extends Controller
                 ->offset($pages->offset)
                 ->limit($pages->limit)
                 ->all();
-        $pages = new Pagination(['totalCount' => $countQuery->count(), 'pageSize' => 5]);
         
         return $this->render('list', array('notes' => $notes, 'pages' => $pages));
     }
@@ -55,10 +55,7 @@ class NotesController extends Controller
             $image->file = UploadedFile::getInstance($image, 'file');
             
             if ($image->file) {
-                $uploadPath = '/upload/' . $image->file->baseName . '.' . $image->file->extension;
-                $filePath = \Yii::$app->basePath . $uploadPath;
-                $image->file->saveAs($filePath);
-                $note->image = $uploadPath;
+                $note->image = NotesHelper::saveImage($image);
             }
             
             if ($note->save()) {
@@ -74,26 +71,22 @@ class NotesController extends Controller
         $image = new UploadImage();
 
         if (!empty(Yii::$app->request->post())) {
-            $editedNote = Yii::$app->request->post();
+            $addedNote = Yii::$app->request->post();
             
-            foreach ($editedNote['Note'] as $fieldKey => $fieldValue) {
+            foreach ($addedNote['Note'] as $fieldKey => $fieldValue) {
                 $note->{$fieldKey} = $fieldValue;
             }
             
             $image->file = UploadedFile::getInstance($image, 'file');
             
             if ($image->file) {
-                $uploadPath = '/upload/' . $image->file->baseName . '.' . $image->file->extension;
-                $filePath = \Yii::$app->basePath . $uploadPath;
-                $image->file->saveAs($filePath);
-                $note->image = $uploadPath;
+                $note->image = NotesHelper::saveImage($image);
             }
             
             if ($note->save()) {
                 Yii::$app->session->setFlash('noteAdded');
             }
         }
-        
         return $this->render('add', array('note' => $note, 'image' => $image));
     }
     
@@ -112,10 +105,7 @@ class NotesController extends Controller
         $note = Note::find()->where(['id' => $id])->asArray()->one();
         
         if (!empty($note['image'])) {
-            $imagePath = \Yii::$app->basePath . $note['image'];
-            $imageType = pathinfo($imagePath, PATHINFO_EXTENSION);
-            $imageData = file_get_contents($imagePath);
-            $note['image'] = 'data:image/' . $imageType . ';base64,' . base64_encode($imageData);
+            $note['image'] = NotesHelper::getEncodedImage($note['image']);
         }
         
         NotesHelper::downloadSendHeaders("data_export_" . date("Y-m-d") . ".csv");
@@ -124,26 +114,32 @@ class NotesController extends Controller
     
     public function actionMail()
     {
-        $id = Yii::$app->getRequest()->getQueryParam('id');
-        $note = Note::find()->where(['id' => $id])->asArray()->one();
-        
-        if (!empty($note['image'])) {
-            $imagePath = \Yii::$app->basePath . $note['image'];
-            $imageType = pathinfo($imagePath, PATHINFO_EXTENSION);
-            $imageData = file_get_contents($imagePath);
-            $note['image'] = 'data:image/' . $imageType . ';base64,' . base64_encode($imageData);
+        if (!empty(Yii::$app->request->post())) {
+            $email = Yii::$app->request->post();
+            
+            $id = Yii::$app->getRequest()->getQueryParam('id');
+            $note = Note::find()->where(['id' => $id])->asArray()->one();
+            
+            if (!empty($note['image'])) {
+                $note['image'] = NotesHelper::getEncodedImage($note['image']);
+            }
+            
+            $message = \Yii::$app->mailer->compose();
+            $message
+            ->setFrom('notes@yii.com')
+            ->setTo($email['SendMailForm']['email'])
+            ->setSubject($note['title'])
+            ->setTextBody($note['description']);
+            
+            $attachContent = NotesHelper::array2csv(array($note));
+            $message->attachContent($attachContent, ['fileName' => 'attach.csv', 'contentType' => 'text/csv']);
+    
+            if ($message->send()) {
+                Yii::$app->session->setFlash('noteSended');
+            }
         }
         
-        $message = \Yii::$app->mailer->compose();
-        $message
-        ->setFrom('notes@yii.com')
-        ->setTo('eugene.timofieiev@gmail.com')
-        ->setSubject($note['title'])
-        ->setTextBody($note['description']);
-        
-        $attachContent =  NotesHelper::array2csv(array($note));
-        $message->attachContent($attachContent, ['fileName' => 'attach.csv', 'contentType' => 'text/csv']);
-
-        $message->send();
+        $email = new SendMailForm();
+        return $this->render('mail', ['email' => $email]);
     }
 }

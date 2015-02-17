@@ -36,6 +36,17 @@ class Notes
     
     public static function getEncodedImage($filePath)
     {
-        
+        $imagePath = \Yii::$app->basePath . $filePath;
+        $imageType = pathinfo($imagePath, PATHINFO_EXTENSION);
+        $imageData = file_get_contents($imagePath);
+        return 'data:image/' . $imageType . ';base64,' . base64_encode($imageData);
+    }
+    
+    public static function saveImage($image)
+    {
+        $uploadPath = '/upload/' . $image->file->baseName . '.' . $image->file->extension;
+        $filePath = \Yii::$app->basePath . $uploadPath;
+        $image->file->saveAs($filePath);
+        return $uploadPath;
     }
 }

@@ -4,7 +4,7 @@ use yii\bootstrap\ActiveForm;
 
 $this->title = 'Add note';
 ?>
-<div class="site-contact">
+<div>
     <h1><?= Html::encode($this->title) ?></h1>
     <?php if (Yii::$app->session->hasFlash('noteAdded')): ?>
         <div class="alert alert-success">

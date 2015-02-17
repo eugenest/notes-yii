@@ -24,9 +24,16 @@ body {
 .notes-controls {
     display:inline-block;
     float: right;
-    height: 18px;
 }
 
 .notes-list {
     width: 50%;
+}
+
+.notes-list li {
+    margin-bottom: 8px;
+}
+
+.notes-controls a:hover {
+    text-decoration: none;
 }
