@@ -13,11 +13,15 @@ $this->title = 'Edit note';
     <?php else: ?>
         <div class="row">
             <div class="col-lg-5">
-                <?php $form = ActiveForm::begin(['id' => 'note-form']); ?>
+                <?php $form = ActiveForm::begin(['id' => 'note-form', 'options' => ['enctype' => 'multipart/form-data']]); ?>
                     <?= Html::activeHiddenInput($note, 'id') ;?>
                     <?= $form->field($note, 'title') ?>
                     <?= $form->field($note, 'author') ?>
                     <?= $form->field($note, 'description')->textArea(['rows' => 4]) ?>
+                    <p>
+                        <?= $form->field($image, 'file')->fileInput() ?>
+                        <img src="<?= $note->image ?>"/ width="200">
+                    </p>
                     <div class="form-group">
                         <?= Html::submitButton('Submit', ['class' => 'btn btn-primary']) ?>
                     </div>
