@@ -27,3 +27,4 @@ phpunit.phar
 /phpunit.xml
 
 /upload
+config/db.php
