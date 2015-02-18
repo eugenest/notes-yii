@@ -1,10 +1,11 @@
 <?php
+use yii\helpers\Html;
 use yii\helpers\Url;
 ?>
 
 <div class="site-index">
     <h1>
-        Note: <?= $note->title; ?>
+        Note: <?= Html::encode("{$note->title}") ?>
         <div class="notes-controls">
             <a href="<?= Url::toRoute(['edit', 'id' => $note->id]); ?>">
                 <button class="btn btn-primary btn-xs">Edit</button>
@@ -20,8 +21,8 @@ use yii\helpers\Url;
             </a>
         </div>
     </h1>
-    <p><?= $note->create_date; ?> : <?= $note->author; ?></p>
-    <p><?= $note->description; ?></p>
+    <p><?= Html::encode("{$note->create_date} : {$note->author}") ?></p>
+    <p><?= Html::encode("{$note->description}") ?></p>
     <?php if ($note->image): ?>
         <img src="<?= $note->image ?>" />
     <?php else :?>
